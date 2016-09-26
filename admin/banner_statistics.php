@@ -19,8 +19,8 @@
 // check if the graphs directory exists
   $dir_ok = false;
   if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-      if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
+    if (is_dir('images/graphs')) {
+      if (tep_is_writable('images/graphs')) {
         $dir_ok = true;
       } else {
         $messageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
@@ -53,13 +53,13 @@
                       array('id' => 'yearly',
                             'text' => STATISTICS_TYPE_YEARLY));
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><?php echo tep_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get'); ?>
+          <tr><?php echo tep_draw_form('year', 'banner_statistics.php', '', 'get'); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
             <td class="main" align="right"><?php echo TITLE_TYPE . ' ' . tep_draw_pull_down_menu('type', $type_array, (tep_not_null($type) ? $type : 'daily'), 'onchange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript><br />
@@ -90,17 +90,17 @@
 
     switch ($type) {
       case 'yearly':
-        include(DIR_WS_INCLUDES . 'graphs/banner_yearly.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_yearly.php');
+        echo tep_image('images/graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
         break;
       case 'monthly':
-        include(DIR_WS_INCLUDES . 'graphs/banner_monthly.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_monthly.php');
+        echo tep_image('images/graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
         break;
       default:
       case 'daily':
-        include(DIR_WS_INCLUDES . 'graphs/banner_daily.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_daily.php');
+        echo tep_image('images/graphs/banner_daily-' . $banner_id . '.' . $banner_extension);
         break;
     }
 ?>
@@ -122,7 +122,7 @@
           </table>
 <?php
   } else {
-    include(DIR_WS_FUNCTIONS . 'html_graphs.php');
+    include('includes/functions/html_graphs.php');
 
     switch ($type) {
       case 'yearly':
@@ -144,11 +144,11 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BACK, 'arrow-1-w', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $HTTP_GET_VARS['bID'])); ?></td>
+        <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BACK, 'arrow-1-w', tep_href_link('banner_manager.php', 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $HTTP_GET_VARS['bID'])); ?></td>
       </tr>
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

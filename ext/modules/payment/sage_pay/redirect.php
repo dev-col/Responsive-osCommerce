@@ -19,20 +19,20 @@
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
-  if ( isset($HTTP_GET_VARS['payment_error']) && tep_not_null($HTTP_GET_VARS['payment_error']) ) {
-    $redirect_url = tep_href_link('checkout_payment.php', 'payment_error=' . $HTTP_GET_VARS['payment_error'] . (isset($HTTP_GET_VARS['error']) && tep_not_null($HTTP_GET_VARS['error']) ? '&error=' . $HTTP_GET_VARS['error'] : ''), 'SSL');
+  if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
+    $redirect_url = tep_href_link('checkout_payment.php', 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
   } else {
     $hidden_params = '';
 
     if ($payment == 'sage_pay_direct') {
       $redirect_url = tep_href_link('checkout_process.php', 'check=3D', 'SSL');
-      $hidden_params = tep_draw_hidden_field('MD', $HTTP_POST_VARS['MD']) . tep_draw_hidden_field('PaRes', $HTTP_POST_VARS['PaRes']);
+      $hidden_params = tep_draw_hidden_field('MD', $_POST['MD']) . tep_draw_hidden_field('PaRes', $_POST['PaRes']);
     } else {
       $redirect_url = tep_href_link('checkout_process.php', '', 'SSL');
     }
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/checkout_confirmation.php');
+  require('includes/languages/' . $language . '/checkout_confirmation.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>
@@ -54,4 +54,4 @@ document.redirect.submit();
 </script>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require('includes/application_bottom.php'); ?>

@@ -29,10 +29,10 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $product_check, $HTTP_GET_VARS, $languages_id, $currency;
+      global $PHP_SELF, $oscTemplate, $product_check, $languages_id, $currency;
 
       if ($product_check['total'] > 0) {        
-        $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_image, p.products_price, p.products_quantity, p.products_tax_class_id, p.products_date_available from products p, products_description pd where p.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
+        $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_image, p.products_price, p.products_quantity, p.products_tax_class_id, p.products_date_available from products p, products_description pd where p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
 
         if ( tep_db_num_rows($product_info_query) === 1 ) {
           $product_info = tep_db_fetch_array($product_info_query);
@@ -50,7 +50,7 @@
             $pi = tep_db_fetch_array($pi_query);
             $products_image = $pi['image'];
           }
-          $data['og:image'] = tep_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);          
+          $data['og:image'] = tep_href_link('images/' . $products_image, '', 'NONSSL', false, false);          
 
           if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
             $products_price = $this->format_raw($new_price);

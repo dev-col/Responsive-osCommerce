@@ -42,7 +42,7 @@
    <script src="ext/js/excanvas.min.js"></script>
 <![endif]-->
  
-<script src="ext/jquery/jquery-2.2.3.min.js"></script>
+<script src="ext/jquery/jquery-3.1.0.min.js"></script>
 
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
 </head>
@@ -53,6 +53,6 @@
   <div id="bodyWrapper" class="<?php echo BOOTSTRAP_CONTAINER; ?>">
     <div class="row">
 
-      <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+      <?php require('includes/header.php'); ?>
 
       <div id="bodyContent" class="col-md-<?php echo $oscTemplate->getGridContentWidth(); ?> <?php echo ($oscTemplate->hasBlocks('boxes_column_left') ? 'col-md-push-' . $oscTemplate->getGridColumnWidth() : ''); ?>">

@@ -13,8 +13,8 @@
   chdir('../../../../');
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
-  require(DIR_WS_LANGUAGES . $language . '/create_account.php');
+  require('includes/languages/' . $language . '/modules/payment/paypal_express.php');
+  require('includes/languages/' . $language . '/create_account.php');
 
 // initialize variables if the customer is not logged in
   if (!tep_session_is_registered('customer_id')) {
@@ -61,7 +61,7 @@
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
   $cartID = $cart->cartID;
 
-  switch ($HTTP_GET_VARS['osC_Action']) {
+  switch ($_GET['osC_Action']) {
     case 'cancel':
       tep_session_unregister('ppe_token');
       tep_session_unregister('ppe_secret');
@@ -81,13 +81,13 @@
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
 
-        if (isset($HTTP_POST_VARS['CURRENCYCODE']) && $currencies->is_set($HTTP_POST_VARS['CURRENCYCODE']) && ($currency != $HTTP_POST_VARS['CURRENCYCODE'])) {
-          $currency = $HTTP_POST_VARS['CURRENCYCODE'];
+        if (isset($_POST['CURRENCYCODE']) && $currencies->is_set($_POST['CURRENCYCODE']) && ($currency != $_POST['CURRENCYCODE'])) {
+          $currency = $_POST['CURRENCYCODE'];
         }
 
         while (true) {
-          if (isset($HTTP_POST_VARS['L_NUMBER' . $counter])) {
-            $cart->add_cart($HTTP_POST_VARS['L_NUMBER' . $counter], $HTTP_POST_VARS['L_QTY' . $counter]);
+          if (isset($_POST['L_NUMBER' . $counter])) {
+            $cart->add_cart($_POST['L_NUMBER' . $counter], $_POST['L_QTY' . $counter]);
           } else {
             break;
           }
@@ -103,14 +103,14 @@
         $sendto = array('firstname' => '',
                         'lastname' => '',
                         'company' => '',
-                        'street_address' => $HTTP_POST_VARS['SHIPTOSTREET'],
+                        'street_address' => $_POST['SHIPTOSTREET'],
                         'suburb' => '',
-                        'postcode' => $HTTP_POST_VARS['SHIPTOZIP'],
-                        'city' => $HTTP_POST_VARS['SHIPTOCITY'],
+                        'postcode' => $_POST['SHIPTOZIP'],
+                        'city' => $_POST['SHIPTOCITY'],
                         'zone_id' => '',
-                        'zone_name' => $HTTP_POST_VARS['SHIPTOSTATE'],
+                        'zone_name' => $_POST['SHIPTOSTATE'],
                         'country_id' => '',
-                        'country_name' => $HTTP_POST_VARS['SHIPTOCOUNTRY'],
+                        'country_name' => $_POST['SHIPTOCOUNTRY'],
                         'country_iso_code_2' => '',
                         'country_iso_code_3' => '',
                         'address_format_id' => '');
@@ -140,7 +140,7 @@
 
         $quotes_array = array();
 
-        include(DIR_WS_CLASSES . 'order.php');
+        include('includes/classes/order.php');
         $order = new order;
 
         if ($cart->get_content_type() != 'virtual') {
@@ -148,7 +148,7 @@
           $total_count = $cart->count_contents();
 
 // load all enabled shipping modules
-          include(DIR_WS_CLASSES . 'shipping.php');
+          include('includes/classes/shipping.php');
           $shipping_modules = new shipping;
 
           $free_shipping = false;
@@ -177,7 +177,7 @@
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include('includes/languages/' . $language . '/modules/order_total/ot_shipping.php');
             }
           }
 
@@ -213,7 +213,7 @@
                                   'tax' => '0');
         }
 
-        include(DIR_WS_CLASSES . 'order_total.php');
+        include('includes/classes/order_total.php');
         $order_total_modules = new order_total;
         $order_totals = $order_total_modules->process();
 
@@ -275,7 +275,7 @@
         tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
-      $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
+      $response_array = $paypal_express->getExpressCheckoutDetails($_GET['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
@@ -466,7 +466,7 @@ EOD;
           tep_session_register('customer_zone_id');
         }
 
-        include(DIR_WS_CLASSES . 'order.php');
+        include('includes/classes/order.php');
         $order = new order;
 
         if ($cart->get_content_type() != 'virtual') {
@@ -474,7 +474,7 @@ EOD;
           $total_count = $cart->count_contents();
 
 // load all enabled shipping modules
-          include(DIR_WS_CLASSES . 'shipping.php');
+          include('includes/classes/shipping.php');
           $shipping_modules = new shipping;
 
           $free_shipping = false;
@@ -503,7 +503,7 @@ EOD;
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include('includes/languages/' . $language . '/modules/order_total/ot_shipping.php');
             }
           }
 
@@ -609,7 +609,7 @@ EOD;
         $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
       }
 
-      include(DIR_WS_CLASSES . 'order.php');
+      include('includes/classes/order.php');
       $order = new order;
 
       $params = array('PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency'],
@@ -662,7 +662,7 @@ EOD;
         $total_count = $cart->count_contents();
 
 // load all enabled shipping modules
-        include(DIR_WS_CLASSES . 'shipping.php');
+        include('includes/classes/shipping.php');
         $shipping_modules = new shipping;
 
         $free_shipping = false;
@@ -691,7 +691,7 @@ EOD;
           if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
             $free_shipping = true;
 
-            include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+            include('includes/languages/' . $language . '/modules/order_total/ot_shipping.php');
           }
         }
 
@@ -800,7 +800,7 @@ EOD;
         $item_params['CALLBACKVERSION'] = $paypal_express->api_version;
       }
 
-      include(DIR_WS_CLASSES . 'order_total.php');
+      include('includes/classes/order_total.php');
       $order_total_modules = new order_total;
       $order_totals = $order_total_modules->process();
 
@@ -872,5 +872,5 @@ EOD;
 
   tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
 
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -19,7 +19,7 @@
     var $enabled = false;
 
     function cm_paypal_login() {
-      global $HTTP_GET_VARS, $PHP_SELF;
+      global $PHP_SELF;
 
       $this->signature = 'paypal|paypal_login|1.0|2.3';
 
@@ -56,20 +56,20 @@
         }
       }
 
-      if ( ($PHP_SELF == 'modules_content.php') && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( ($PHP_SELF == 'modules_content.php') && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $oscTemplate;
+      global $oscTemplate;
 
       if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-        if ( isset($HTTP_GET_VARS['action']) ) {
-          if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
+        if ( isset($_GET['action']) ) {
+          if ( $_GET['action'] == 'paypal_login' ) {
             $this->preLogin();
-          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+          } elseif ( $_GET['action'] == 'paypal_login_process' ) {
             $this->postLogin();
           }
         }
@@ -90,7 +90,7 @@
         }
 
         ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
+        include('includes/modules/content/' . $this->group . '/templates/paypal_login.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);
@@ -98,14 +98,14 @@
     }
 
     function preLogin() {
-      global $HTTP_GET_VARS, $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
+      global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
 
       $return_url = tep_href_link('login.php', '', 'SSL');
 
-      if ( isset($HTTP_GET_VARS['code']) ) {
+      if ( isset($_GET['code']) ) {
         $paypal_login_customer_id = false;
 
-        $params = array('code' => $HTTP_GET_VARS['code']);
+        $params = array('code' => $_GET['code']);
 
         $response_token = $this->getToken($params);
 
@@ -277,8 +277,8 @@
         if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
-              include(DIR_WS_MODULES . 'payment/paypal_express.php');
+              include('includes/languages/' . $language . '/modules/payment/paypal_express.php');
+              include('includes/modules/payment/paypal_express.php');
             }
 
             $ppe = new paypal_express();

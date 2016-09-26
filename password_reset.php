@@ -12,19 +12,19 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/password_reset.php');
+  require('includes/languages/' . $language . '/password_reset.php');
 
   $error = false;
 
-  if ( !isset($HTTP_GET_VARS['account']) || !isset($HTTP_GET_VARS['key']) ) {
+  if ( !isset($_GET['account']) || !isset($_GET['key']) ) {
     $error = true;
 
     $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
   }
 
   if ($error == false) {
-    $email_address = tep_db_prepare_input($HTTP_GET_VARS['account']);
-    $password_key = tep_db_prepare_input($HTTP_GET_VARS['key']);
+    $email_address = tep_db_prepare_input($_GET['account']);
+    $password_key = tep_db_prepare_input($_GET['key']);
 
     if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
       $error = true;
@@ -56,9 +56,9 @@
     tep_redirect(tep_href_link('password_forgotten.php'));
   }
 
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    $password_new = tep_db_prepare_input($HTTP_POST_VARS['password']);
-    $password_confirmation = tep_db_prepare_input($HTTP_POST_VARS['confirmation']);
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+    $password_new = tep_db_prepare_input($_POST['password']);
+    $password_confirmation = tep_db_prepare_input($_POST['confirmation']);
 
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
@@ -84,7 +84,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('login.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="page-header">
@@ -127,6 +127,6 @@
 </form>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

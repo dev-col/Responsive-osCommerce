@@ -14,7 +14,7 @@
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
   if ($session_started == false) {
-    if ( !isset($HTTP_GET_VARS['cookie_test']) ) {
+    if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
       tep_redirect(tep_href_link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
@@ -68,11 +68,11 @@
     tep_redirect(tep_href_link('index.php'));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/login.php');
+  require('includes/languages/' . $language . '/login.php');
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link('login.php', '', 'SSL'));
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="page-header">
@@ -92,6 +92,6 @@
 </div>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

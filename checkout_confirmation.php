@@ -36,18 +36,18 @@
   }
 
   if (!tep_session_is_registered('payment')) tep_session_register('payment');
-  if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
+  if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment($payment);
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
   $payment_modules->update_status();
@@ -61,10 +61,10 @@
   }
 
 // load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping($shipping);
 
-  require(DIR_WS_CLASSES . 'order_total.php');
+  require('includes/classes/order_total.php');
   $order_total_modules = new order_total;
   $order_total_modules->process();
 
@@ -82,12 +82,12 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/checkout_confirmation.php');
+  require('includes/languages/' . $language . '/checkout_confirmation.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="page-header">
@@ -234,9 +234,11 @@
       if (isset($confirmation['fields'])) {
         echo '<div class="col-sm-6">';
         echo '  <div class="alert alert-info">';
+        $fields = '';
         for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
-          echo $confirmation['fields'][$i]['title'] . ' ' . $confirmation['fields'][$i]['field'];
+          $fields .= $confirmation['fields'][$i]['title'] . ' ' . $confirmation['fields'][$i]['field'] . '<br>';
         }
+        if (strlen($fields) > 4) echo substr($fields,0,-4);
         echo '  </div>';
         echo '</div>';
       }
@@ -299,6 +301,6 @@
 </form>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>
